@@ -23,6 +23,7 @@ def log(log_mssg):
     fichero_log.write(cadena)
     fichero_log.close()
 
+
 class Config(ContentHandler):
     """
     Clase para configurar un User Agent
@@ -96,7 +97,7 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
             ip_log = self.client_address[0]
             port_log = self.client_address[1]
             if palabras[0] == "REGISTER":
-                log_mssg = " Received from " + ip_log + ":" 
+                log_mssg = " Received from " + ip_log + ":"
                 log_mssg += str(port_log) + ": " + line
                 log(log_mssg)
                 direccion = palabras[1]
@@ -112,10 +113,11 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                 # Añadimos una entrada al diccionario
                 self.clientes[direccion_sip] = [ip, port, hora, expires]
                 print self.clientes[direccion_sip]
-                print "SIP/2.0 200 OK \r\n\r\n"
+                resp = "SIP/2.0 200 OK \r\n\r\n"
+                print resp
                 self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
                 log_mssg = " Sent to " + ip_log + ":"
-                log_mssg += str(port_log) + ": " + line
+                log_mssg += str(port_log) + ": " + resp
                 log(log_mssg)
                 # Borramos si se da de baja
                 if expires == "0":
@@ -126,7 +128,7 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                 self.register2file()
 
             elif palabras[0] == "INVITE":
-                log_mssg = " Received from " + ip_log + ":" 
+                log_mssg = " Received from " + ip_log + ":"
                 log_mssg += str(port_log) + ": " + line
                 log(log_mssg)
                 destino = palabras[1]
@@ -149,16 +151,19 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                     my_socket.connect((dest_ip, int(dest_port)))
                     print "CONECTADO"
                     my_socket.send(line)
-                    log_mssg = " Sent to " + dest_ip + ":" 
+                    log_mssg = " Sent to " + dest_ip + ":"
                     log_mssg += dest_port + ": " + line
                     log(log_mssg)
                     #reenviamos al cliente
                     data = my_socket.recv(1024)
-                    log_mssg = " Received from " + dest_ip + ":" 
-                    log_mssg += dest_port + ": " + line
+                    log_mssg = " Received from " + dest_ip + ":"
+                    log_mssg += dest_port + ": " + data
                     log(log_mssg)
                     print data
                     self.wfile.write(data)
+                    log_mssg = " Sent to " + dest_ip + ":"
+                    log_mssg += dest_port + ": " + data
+                    log(log_mssg)
                     my_socket.close
                 else:
                     log_mssg = " Error: SIP/2.0 404 User Not Found"
@@ -166,7 +171,7 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                     self.wfile.write("SIP/2.0 404 User Not Found\r\n\r\n")
 
             elif palabras[0] == "BYE" or palabras[0] == "ACK":
-                log_mssg = " Received from " + ip_log + ":" 
+                log_mssg = " Received from " + ip_log + ":"
                 log_mssg += str(port_log) + ": " + line
                 log(log_mssg)
                 destino = palabras[1]
@@ -190,14 +195,11 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                     my_socket.connect((dest_ip, int(dest_port)))
                     print "CONECTADO"
                     my_socket.send(line)
-                    log_mssg = " Sent to " + dest_ip + ":" 
+                    log_mssg = " Sent to " + dest_ip + ":"
                     log_mssg += dest_port + ": " + line
                     log(log_mssg)
                      #reenviamos al cliente
                     data = my_socket.recv(1024)
-                    log_mssg = " Received from " + dest_ip + ":" 
-                    log_mssg += dest_port + ": " + line
-                    log(log_mssg)
                     print data
                     self.wfile.write(data)
                     my_socket.close
@@ -205,14 +207,14 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                 log_mssg = " Error: SIP/2.0 405 Method Not Allowed"
                 log(log_mssg)
                 self.wfile.write("SIP/2.0 405 Method Not Allowed\r\n\r\n")
-                log_mssg = " Sent to " + ip_log + ":" 
+                log_mssg = " Sent to " + ip_log + ":"
                 log_mssg += str(port_log) + ": " + line
                 log(log_mssg)
             else:
                 log_mssg = " Error: " + "SIP/2.0 400 Bad Request"
                 log(log_mssg)
                 self.wfile.write("SIP/2.0 400 Bad Request\r\n\r\n")
-                log_mssg = " Sent to " + ip_log + ":" 
+                log_mssg = " Sent to " + ip_log + ":"
                 log_mssg += str(port_log) + ": " + line
                 log(log_mssg)
 if __name__ == "__main__":
@@ -230,6 +232,7 @@ if __name__ == "__main__":
     DATA_PSSWDPATH = config_ua[4]
     LOG = config_ua[5]
     serv = SocketServer.UDPServer(("", SERVER_PORT), SIPRegisterHandler)
-    imprimir = "Server " + SERVER_NAME + " listening at port " + SERVER_PORT
+    imprimir = "Server " + SERVER_NAME + " listening at port "
+    imprimir += str(SERVER_PORT) + "..."
     print imprimir
     serv.serve_forever()
