@@ -15,8 +15,8 @@ class Server_Sip(SocketServer.DatagramRequestHandler):
     """
     Clase para un Servidor SIP
     """
-    receptor_IP = ""
-    receptor_puerto = ""
+    receptor = {'IP': "", "PORT": 0}
+    print "entrada" 
     
     def handle(self):
         # Escribe dirección y puerto del cliente (de tupla client_address)
@@ -31,10 +31,10 @@ class Server_Sip(SocketServer.DatagramRequestHandler):
             # Si no hay más líneas salimos del bucle infinito
             if line[0] == "INVITE":
                 print "INVITE recibido"
-                self.receptor_IP = line[7]
-                self.receptor_puerto = line[11]
-                print self.receptor_IP
-                print self.receptor_puerto
+                self.receptor["IP"] = line[7]
+                self.receptor["PORT"] = line[11]
+                print self.receptor["IP"]
+                print self.receptor["PORT"]
                 mensaje = ("SIP/2.0 100 Trying\r\n\r\nSIP/2.0 180 Ringing"
                            "\r\n\r\nSIP/2.0 200 OK\r\n")
                 mensaje += "Content-type: application/sdp\r\n\r\n"
@@ -44,9 +44,11 @@ class Server_Sip(SocketServer.DatagramRequestHandler):
                 self.wfile.write(mensaje)
             elif line[0] == "ACK":
                 print "ACK recibido"
+                print self.receptor["IP"]
+                print self.receptor["PORT"]
             # aEjecutar es un string con lo que se ha de ejecutar en la shell
-                aEjecutar = ('./mp32rtp -i ' + self.receptor_IP + ' -p ' + 
-                             self.receptor_puerto + ' < ' + fich)
+                aEjecutar = ('./mp32rtp -i ' + self.receptor["IP"] + ' -p ' + 
+                             self.receptor["PORT"] + ' < ' + fich)
                 print "Vamos a ejecutar", aEjecutar
                 os.system('chmod 755 mp32rtp')
                 os.system(aEjecutar)
