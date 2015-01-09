@@ -125,7 +125,7 @@ if __name__ == "__main__":
         print 'Recibido -- ', data
         data = data.split()
         print data
-        if len(data) > 3:
+        if len(data) > 8:
             if data[0] == "SIP/2.0" and data[8] == "OK":
                 rtp_ip = data[13]
                 rtp_puerto = data[17]
@@ -134,6 +134,8 @@ if __name__ == "__main__":
                 print "Enviando: " + envio
                 my_socket.send(envio)
                 # Envio rtp
+                print rtp_ip
+                print rtp_puerto
                 aEjecutar = ('./mp32rtp -i ' + rtp_ip + ' -p ' + 
                              rtp_puerto + ' < ' + FICH)
                 print "Vamos a ejecutar", aEjecutar
