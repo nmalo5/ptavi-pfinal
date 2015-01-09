@@ -132,6 +132,8 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                     print data
                     self.wfile.write(data)
                     my_socket.close
+                else:
+                    self.wfile.write("SIP/2.0 404 User Not Found\r\n\r\n")
                     
             elif palabras[0] == "BYE" or palabras[0] == "ACK":
                 destino = palabras[1]
@@ -146,19 +148,23 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                         dest_ip = self.clientes[destino_sip][0]
                         exito = True
                 print exito
-                if palabras[0] == "BYE":
-                    del self.clientes[(direccion_sip)]
+                #if palabras[0] == "BYE":
+                 #   del self.clientes[(direccion_sip)]
                 if exito:
                     #ABRIR SOCKET Y ENVIAR
-                    print "REENVIAMOS ACK"
+                    print "REENVIAMOS 200 OK"
                     my_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                     my_socket.setsockopt(socket.SOL_SOCKET, 
                                          socket.SO_REUSEADDR, 1)
                     my_socket.connect((dest_ip, int(dest_port)))
                     print "CONECTADO"
                     my_socket.send(line)
-                else:
-                    self.wfile.write("SIP/2.0 404 User Not Found\r\n\r\n")
+                     #reenviamos al cliente
+                    data = my_socket.recv(1024)
+                    print data
+                    self.wfile.write(data)
+                    my_socket.close
+               
                 
             elif palabras[0] == "CANCEL" or palabras[0] == "OPTIONS":
                 self.wfile.write("SIP/2.0 405 Method Not Allowed\r\n\r\n")
