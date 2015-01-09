@@ -24,6 +24,7 @@ def log(log_mssg):
     fichero_log.write(cadena)
     fichero_log.close()
 
+
 class Server_Sip(SocketServer.DatagramRequestHandler):
     """
     Clase para un Servidor SIP
@@ -55,17 +56,17 @@ class Server_Sip(SocketServer.DatagramRequestHandler):
                 mensaje += SERVER_IP + "\r\n" + "s=finalptavi\r\n" + "t=0\r\n"
                 mensaje += "m=audio " + str(AUDIO_PORT) + " RTP\r\n"
                 self.wfile.write(mensaje)
-                log_mssg = " Received from " + PROXY_IP + ":" 
+                log_mssg = " Received from " + PROXY_IP + ":"
                 log_mssg += str(PROXY_PORT) + ": " + mssg
                 log(log_mssg)
-                log_mssg = " Sent to " + self.receptor["IP"] + ":" 
+                log_mssg = " Sent to " + self.receptor["IP"] + ":"
                 log_mssg += self.receptor["PORT"] + ": " + mensaje
                 log(log_mssg)
             elif line[0] == "ACK":
                 print "ACK recibido"
                 print self.receptor["IP"]
                 print self.receptor["PORT"]
-                log_mssg = " Received from " + PROXY_IP + ":" 
+                log_mssg = " Received from " + PROXY_IP + ":"
                 log_mssg += str(PROXY_PORT) + ": " + mssg
                 log(log_mssg)
             # aEjecutar es un string con lo que se ha de ejecutar en la shell
@@ -75,26 +76,26 @@ class Server_Sip(SocketServer.DatagramRequestHandler):
                 os.system('chmod 755 mp32rtp')
                 os.system(aEjecutar)
                 print "HECHO"
-                log_mssg = " Sent to " + self.receptor["IP"] + ":" 
+                log_mssg = " Sent to " + self.receptor["IP"] + ":"
                 log_mssg += self.receptor["PORT"] + ": " + "RTP"
                 log(log_mssg)
             elif line[0] == "BYE":
                 print "BYE recibido"
                 self.wfile.write("SIP/2.0 200 OK\r\n\r\n")
-                log_mssg = " Received from " + PROXY_IP + ":" 
+                log_mssg = " Received from " + PROXY_IP + ":"
                 log_mssg += str(PROXY_PORT) + ": " + mssg
                 log(log_mssg)
             elif (line[0] == "CANCEL" or line[0] == "REGISTER"
                   or line[0] == "OPTIONS"):
                 print "metodo no disponible recibido"
                 self.wfile.write("SIP/2.0 405 Method Not Allowed\r\n\r\n")
-                log_mssg = " Received from " + PROXY_IP + ":" 
+                log_mssg = " Received from " + PROXY_IP + ":"
                 log_mssg += str(PROXY_PORT) + ": " + mssg
                 log(log_mssg)
             else:
                 print "petición incorrecta recibida"
                 self.wfile.write("SIP/2.0 400 Bad Request\r\n\r\n")
-                log_mssg = " Received from " + PROXY_IP + ":" 
+                log_mssg = " Received from " + PROXY_IP + ":"
                 log_mssg += str(PROXY_PORT) + ": " + mssg
                 log(log_mssg)
 
