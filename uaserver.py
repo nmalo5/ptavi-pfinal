@@ -122,4 +122,6 @@ if __name__ == "__main__":
     PROXY_PORT = int(config_ua[6])
     serv = SocketServer.UDPServer((SERVER_IP, SERVER_PORT), Server_Sip)
     print "Lanzando servidor SIP..."
+    log_mssg = " Starting... "
+    log(log_mssg)
     serv.serve_forever()
