@@ -23,6 +23,7 @@ def log(log_mssg):
     fichero_log.write(cadena)
     fichero_log.close()
 
+
 class Config(ContentHandler):
     """
     Clase para configurar un User Agent
@@ -139,7 +140,7 @@ if __name__ == "__main__":
     elif metodo == "BYE":
         envio = " sip:" + direccion_sip + " SIP/2.0\r\n"
         log_mssg = " Sent to " + PROXY_IP + ":" + str(PROXY_PORT) + ": "
-        log_mssg +=  metodo + " " + envio
+        log_mssg += metodo + " " + envio
         log(log_mssg)
     envio = metodo + envio
     print "Enviando: " + envio
@@ -151,12 +152,12 @@ if __name__ == "__main__":
         data = mssg.split()
         print data
         if data[0] == "SIP/2.0":
-            log_mssg = " Received from " + PROXY_IP + ":" 
+            log_mssg = " Received from " + PROXY_IP + ":"
             log_mssg += str(PROXY_PORT) + ": " + mssg
             log(log_mssg)
         else:
-            log_mssg = "Error: " 
-            log_mssg +=  mssg
+            log_mssg = "Error: "
+            log_mssg += mssg
             log(log_mssg)
         if len(data) > 8:
             if data[0] == "SIP/2.0" and data[8] == "OK":
@@ -167,7 +168,7 @@ if __name__ == "__main__":
                 print "Enviando: " + envio
                 my_socket.send(envio)
                 log_mssg = " Sent to " + PROXY_IP + ":" + str(PROXY_PORT) + ":"
-                log_mssg +=  " " + metodo + " " + envio
+                log_mssg += " " + metodo + " " + envio
                 log(log_mssg)
                 # Envio rtp
                 print rtp_ip
@@ -179,7 +180,7 @@ if __name__ == "__main__":
                 os.system(aEjecutar)
                 print "HECHO"
                 log_mssg = " Sent to " + rtp_ip + ":" + rtp_puerto + ": "
-                log_mssg +=  "RTP"
+                log_mssg += "RTP"
                 log(log_mssg)
     except socket.error:
         print ("Error: No server listening at " + SERVER_IP +
