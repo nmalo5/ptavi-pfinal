@@ -142,6 +142,8 @@ if __name__ == "__main__":
         log_mssg = " Sent to " + PROXY_IP + ":" + str(PROXY_PORT) + ": "
         log_mssg += metodo + " " + envio
         log(log_mssg)
+        log_mssg = " Finishing. "
+        log(log_mssg)
     envio = metodo + envio
     print "Enviando: " + envio
     my_socket.send(envio)
