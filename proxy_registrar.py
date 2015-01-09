@@ -161,8 +161,8 @@ class SIPRegisterHandler(SocketServer.DatagramRequestHandler):
                     log(log_mssg)
                     print data
                     self.wfile.write(data)
-                    log_mssg = " Sent to " + dest_ip + ":"
-                    log_mssg += dest_port + ": " + data
+                    log_mssg = " Sent to " + ip_log + ":"
+                    log_mssg += str(port_log) + ": " + data
                     log(log_mssg)
                     my_socket.close
                 else:
@@ -235,4 +235,6 @@ if __name__ == "__main__":
     imprimir = "Server " + SERVER_NAME + " listening at port "
     imprimir += str(SERVER_PORT) + "..."
     print imprimir
+    log_mssg = " Starting... "
+    log(log_mssg)
     serv.serve_forever()
